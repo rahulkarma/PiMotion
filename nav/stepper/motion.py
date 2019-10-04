@@ -1,38 +1,34 @@
 from time import sleep
-import RPi.GPIO as GPIO
-from stepper_constants import *
+from .stepper_constants import *
 
-GPIO.setmode(GPIO.BCM)
+class StepperMotion:
+	def __init__(self, GPIO):
+		self.step_mode_select = [STEPPER_m0, STEPPER_m1, STEPPER_m2]
+		self.wheels_step = [WHEEL1_step, WHEEL2_step, WHEEL3_step, WHEEL4_step]
+		self.wheels_dir = [WHEEL1_dir, WHEEL2_dir, WHEEL3_dir, WHEEL4_dir]
 
-step_mode_select = [STEPPER_m0, STEPPER_m1, STEPPER_m2]
-wheels_step = [WHEEL1_step, WHEEL2_step, WHEEL3_step, WHEEL4_step]
-wheels_dir = [WHEEL1_dir, WHEEL2_dir, WHEEL3_dir, WHEEL4_dir]
+		out_pins = self.step_mode_select + self.wheels_step + self.wheels_dir
 
-# Set GPIO pinouts
-out_pins = step_mode_select + wheels_step + wheels_dir
-for pin in out_pins:
-	GPIO.setup(pin, GPIO.OUT)
+		[GPIO.setup(pin, GPIO.OUT) for pin in out_pins]
 
-step_count = STEPS_PER_REVOLUTION * 20
+	"""
+	TODO: Move forward and back
 
-for pin in wheels_dir:
-	GPIO.output(pin, CW)
+	Change Log
+		[0.0.0] Rishav
+			--- Created function
+	"""
+	def mov(self, dir, distance):
+		print(dir, distance)
 
-for pin in step_mode_select:
-	GPIO.output(pin, GPIO.HIGH)
+	# TODO: Turn left and right
+	def turn(self, dir, degrees):
+		pass
 
-sleep(1)
+	# TODO: Strafe left and right
+	def strafe(self, dir, distance):
+		pass
 
-for x in range(step_count):
-	[GPIO.output(x, GPIO.HIGH) for x in wheels_step]
-	sleep(STEPPER_DELAY)
-	[GPIO.output(x, GPIO.LOW) for x in wheels_step]
-	sleep(STEPPER_DELAY)
-
-sleep(.5)
-
-for pin in wheels_dir:
-	GPIO.output(pin, CCW)
-
-for pin in step_mode_select:
-	GPIO.output(pin, GPIO.LOW)
+	# TODO: Diagonal movement
+	def diagonal_move(self, dir, distance):
+		pass
