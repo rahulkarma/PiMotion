@@ -20,7 +20,7 @@ def main():
     step_motion = StepperMotion(GPIO)
 
     # TODO: Example call
-    step_motion.mov(1, fwd_dist)
+    step_motion.mov(1, fwd_dist, GPIO)
 
     GPIO.cleanup()
 
