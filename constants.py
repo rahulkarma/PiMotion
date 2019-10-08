@@ -1,0 +1,2 @@
+LEFT = False
+RIGHT = True
