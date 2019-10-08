@@ -2,7 +2,7 @@
 name: Bug report
 about: Report bugs
 title: ''
-labels: ''
+labels: bug
 assignees: ''
 
 ---
@@ -14,7 +14,7 @@ A clear and concise description of what the bug is.
 Steps to reproduce the behavior:
 1. Run file with these parameters
 2. Wait for this to happen
-4. See error
+3. See error
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
