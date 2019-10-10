@@ -1,8 +1,9 @@
 from argparse import ArgumentParser
 import RPi.GPIO as GPIO
-from nav.stepper.motion import StepperMotion
-from nav.stepper.stepper_constants import STEP_MODE_SELECT
-from constants import *
+from motion import*
+from motion import StepperMotion
+from stepper_constants import STEP_MODE_SELECT
+
 
 def main():
     parser = ArgumentParser(description='Select modes on the robot')
@@ -25,7 +26,8 @@ def main():
     [GPIO.output(pin, GPIO.HIGH) for pin in STEP_MODE_SELECT]
 
     # TODO: Example call
-    step_motion.strafe(LEFT, 6, GPIO)
+    #step_motion.strafe(LEFT, 7, GPIO)
+    step_motion.diagonal_move(LEFT, FWD, 14, GPIO)
     #step_motion.mov(0, 6, GPIO)
     # Close motor controller board.
     [GPIO.output(pin, GPIO.LOW) for pin in STEP_MODE_SELECT]
