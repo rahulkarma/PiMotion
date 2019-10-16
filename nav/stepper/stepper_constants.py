@@ -20,6 +20,10 @@ BL_dir = 8
 FL_step = 24
 FL_dir = 23
 
+#Direction constants
+FWD = True
+REV = False
+
 CW = 1 			                 # Clockwise rotation
 CCW = 0 		                 # Counter-clockwise rotation
 STEPS_PER_REVOLUTION = 800 		 # Steps per Revolution (360/1.8) * 4. Multiply by 4 because quarter step.

@@ -18,9 +18,15 @@ def main():
 
     # Initialize stepper motion object
     step_motion = StepperMotion(GPIO)
+    
+    # Motor controller
+    for pin in self.step_mode_select:
+        GPIO.output(pin, GPIO.HIGH)
+    
+    sleep(1)
 
     # TODO: Example call
-    step_motion.mov(1, fwd_dist, GPIO)
+    step_motion.mov(FWD, fwd_dist, GPIO) #FWD is True, changed from int 1. REV = False
 
     GPIO.cleanup()
 
