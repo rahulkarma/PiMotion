@@ -1,38 +1,73 @@
 from time import sleep
-import RPi.GPIO as GPIO
-from stepper_constants import *
+from .stepper_constants import *
 
-GPIO.setmode(GPIO.BCM)
+class StepperMotion:
+	def __init__(self, GPIO):
+            self.step_mode_select = [STEPPER_m0, STEPPER_m1, STEPPER_m2]
+            self.wheels_step = [BR_step, FR_step, BL_step, FL_step]
+            self.wheels_dir = [BR_dir, FR_dir, BL_dir, FL_dir]
+            out_pins = self.step_mode_select + self.wheels_step + self.wheels_dir
+            
+            [GPIO.setup(pin, GPIO.OUT) for pin in out_pins]
 
-step_mode_select = [STEPPER_m0, STEPPER_m1, STEPPER_m2]
-wheels_step = [WHEEL1_step, WHEEL2_step, WHEEL3_step, WHEEL4_step]
-wheels_dir = [WHEEL1_dir, WHEEL2_dir, WHEEL3_dir, WHEEL4_dir]
+	"""
+	TODO: Move forward and back
 
-# Set GPIO pinouts
-out_pins = step_mode_select + wheels_step + wheels_dir
-for pin in out_pins:
-	GPIO.setup(pin, GPIO.OUT)
+	Change Log
+		[0.0.0] Rishav
+			--- Created function
+        Change Log
+                [0.1.0] Jonathan
+                        --- GPIO arg has been added to allow functionality of
+                        the robots wheels. This allows us to manipulate IO pins.
+                        Wheels have corrected names based off of their position.
+        Change Log
+                [0.2.0] Jonathan
+                        --- Direction is now a boolean True or False. Since other
+                        directions will be included later on, this is temporary.
+                        ValueError Exception is now thrown when direction is not 
+                        set to be True or False. Delay argument has been added 
+                        that defaults to STEPPER_DELAY. This allows us to change 
+                        the speed via the parameter.
+	"""
+	def mov(self, dir, distance, GPIO, delay=STEPPER_DELAY):
+            distance = int(distance* STEPS_PER_INCH)
+            
+            try:
+                #if FWD
+                if dir:
+                    for pin in [BR_dir, FR_dir]:
+                        GPIO.output(pin, CW)
+                    for pin in [BL_dir, FL_dir]:
+                        GPIO.output(pin, CCW)
+                #else if REV    
+                elif not dir:
+                    for pin in [BR_dir, FR_dir]:
+                        GPIO.output(pin, CCW)
+                    for pin in [BL_dir, FL_dir]:
+                        GPIO.output(pin, CW)
 
-step_count = STEPS_PER_REVOLUTION * 20
+                    for _ in range(distance):
+                        [GPIO.output(x, GPIO.HIGH) for x in self.wheels_step]
+                        sleep(delay)
+                        [GPIO.output(x, GPIO.LOW) for x in self.wheels_step]
+                        sleep(delay)
+                
+                else:
+                    raise ValueError
+            
+            except ValueError:
+                print("Error: Direction must be FWD or REV")
 
-for pin in wheels_dir:
-	GPIO.output(pin, CW)
 
-for pin in step_mode_select:
-	GPIO.output(pin, GPIO.HIGH)
+	# TODO: Turn left and right
+	def turn(self, dir, degrees):
+		pass
 
-sleep(1)
+	# TODO: Strafe left and right
+	def strafe(self, dir, distance):
+		pass
 
-for x in range(step_count):
-	[GPIO.output(x, GPIO.HIGH) for x in wheels_step]
-	sleep(STEPPER_DELAY)
-	[GPIO.output(x, GPIO.LOW) for x in wheels_step]
-	sleep(STEPPER_DELAY)
-
-sleep(.5)
-
-for pin in wheels_dir:
-	GPIO.output(pin, CCW)
-
-for pin in step_mode_select:
-	GPIO.output(pin, GPIO.LOW)
+	# TODO: Diagonal movement
+	def diagonal_move(self, dir, distance):
+		pass
